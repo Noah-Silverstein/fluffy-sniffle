@@ -11,8 +11,8 @@
     "src/@types"
   ],
   "devDependencies": {
-    "typescript": "^4.6.2",
-    "vite": "^2.8.6"
+    "typescript": "^4.9.5",
+    "vite": "^2.9.15"
   },
   "dependencies": {
     "babylonjs": "^4.2.2"
