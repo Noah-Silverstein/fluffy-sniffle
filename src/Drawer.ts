@@ -5,8 +5,8 @@ or move/redraw a planet
 all of that happens here
 */
 
-import { Color3, MeshBuilder, Scene, StandardMaterial } from "babylonjs";
-import { Moon, Planet, Star } from "./CelestialBodies";
+import { Color3, Curve3, MeshBuilder, Scene, StandardMaterial, Vector3 } from "babylonjs";
+import { CelestialBody, Moon, Planet, Star } from "./CelestialBodies";
 import { PlanetarySystem } from "./PlanetarySystem";
 
 export class Drawer {
@@ -66,6 +66,61 @@ export class Drawer {
     drawPlanetarySystem(sys: PlanetarySystem){
 
     }
+    //all planets are drawn in the X,Z plane
+    drawOrbit(body: CelestialBody, color: Color3){
+        //to draw a circle you need 3 V3 vectors
+        let f = new Vector3(body.orbit.orbitLength, 0, 0);
+        let s = new Vector3(-body.orbit.orbitLength, 0, 0)
+        let t = new Vector3(0,0, body.orbit.orbitLength)
+
+        //now we can draw an circle through the 3 points
+        //create a circle object. orbitlength determines the #steps of the circle
+        let circle = Curve3.ArcThru3Points(f, s, t, body.orbit.orbitLength, undefined, true);
+        //create the mesh
+        let orbitPath = MeshBuilder.CreateLines(body.name+"orbit", {points: circle.getPoints()}, this.scene)
+        //create the material and assign
+        let mat = new StandardMaterial(body.name+"orbitmaterial", this.scene)
+        mat.emissiveColor = color
+        orbitPath.material = mat
+    }
+
+    drawOrbits(sys: PlanetarySystem){
+        Object.values(sys.sysBodies).forEach(body => {
+            switch (true) {
+                case body instanceof Planet:
+                    this.drawOrbit(body, new Color3(177/255,177/255,190/255))
+                    break;
+                case body instanceof Moon:
+                    this.drawOrbit(body, new Color3(179/255, 155/255, 125/255))
+                    break;
+                default:
+                    break;
+                
+            }
+        });
+    }
+
+    updateOrbits(sys: PlanetarySystem){
+        //for moons and satellites the position of the orbit has to be the position of the parent body
+        Object.values(sys.sysBodies).forEach(body => {
+            switch (true) {
+                case body instanceof Moon:
+                    let parentBody = body.parentBody
+                    if (parentBody) {   
+                        let parentBodyMesh = this.scene.getMeshByName(parentBody.name)
+                        let bodyMesh = this.scene.getMeshByName(body.name+"orbit")
+                        if (parentBodyMesh && bodyMesh){
+                            bodyMesh.position.x = parentBodyMesh.position.x
+                            bodyMesh.position.z = parentBodyMesh.position.z
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        })
+    }
+
 
     updatePlanetarySystem(sys: PlanetarySystem, alpha: number){
         Object.values(sys.sysBodies).forEach(body => {

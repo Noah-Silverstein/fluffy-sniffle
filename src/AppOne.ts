@@ -18,7 +18,8 @@ export class AppOne {
         console.log("created drawer");
         this.drawer.drawSolarSystem(solarSystem, solarSystemColors)
         console.log("drew solarsystem");
-        
+        this.drawer.drawOrbits(solarSystem)
+        console.log("drew orbits");
 
     }
 
@@ -36,6 +37,7 @@ export class AppOne {
         this.engine.runRenderLoop(() => {
             alpha += 0.001
             this.drawer.updatePlanetarySystem(solarSystem, alpha)
+            this.drawer.updateOrbits(solarSystem)
             this.scene.render();
         });
     }
@@ -57,7 +59,8 @@ var createScene = function (engine: BABYLON.Engine, canvas: HTMLCanvasElement) {
 
     // This attaches the camera to the canvas
     camera.attachControl(canvas, true);
-
+    camera.zoomToMouseLocation = true;
+    camera.inputs.addMouseWheel();
     // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
     //var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
