@@ -1,4 +1,5 @@
 import { AppOne as App } from './AppOne';
+import './styles.scss';
 
 console.log(`main.ts starting ${App.name}`);
 window.addEventListener('DOMContentLoaded', () => {

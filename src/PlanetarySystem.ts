@@ -8,7 +8,7 @@ TO_DO:
 
 */
 
-import { CelestialBody, Moon, Planet, Star } from "./CelestialBodies";
+import { CelestialBody, Moon, Planet, Star, PlanetaryMass } from "./CelestialBodies";
 
 //singular star system with only planets and moons
 export class PlanetarySystem {
@@ -42,6 +42,17 @@ export class PlanetarySystem {
     
     getParentBody(body: CelestialBody){
         return this.sysBodies[body.name].parentBody
+    }
+
+    getBodyByName(name: string){
+        return this.sysBodies[name]
+    }
+
+    getPlanetaryMassByName(name: string){
+        let plm = this.sysBodies[name]
+        if (plm instanceof PlanetaryMass)
+            return plm
+            return null
     }
 
 }

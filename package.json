@@ -11,10 +11,14 @@
     "src/@types"
   ],
   "devDependencies": {
+    "@types/d3-scale": "^4.0.3",
+    "sass": "^1.59.2",
     "typescript": "^4.9.5",
     "vite": "^2.9.15"
   },
   "dependencies": {
-    "babylonjs": "^5.50.0"
+    "babylonjs": "^5.50.0",
+    "d3-scale": "^4.0.2",
+    "sass-math": "^1.0.0"
   }
 }

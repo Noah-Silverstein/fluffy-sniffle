@@ -1,0 +1,288 @@
+/*
+code from
+https://codepen.io/jasperlachance/pen/yOJdRr
+
+*/
+@use "sass:math";
+/*
+for the initial menu button
+
+*/
+//this doesn't really work just leave it for now
+$navposfromcorner: 10px;
+$navsize: 80px;
+
+$mainbuttonsize: 60px;
+
+$buttonmarginleft: -30px;   //centers the button in the nav menu class
+$buttonmargintop: 10px;     //centers the button in the nav menu class  
+
+$openbuttonsize: 60px; //should probably not be larger than navsize
+$menubuttonsize: 40px; //should not be larger than openbuttonsize
+
+//the nav div
+.menu {
+    position: absolute;
+    top: $navposfromcorner;
+    bottom: 0;
+    left: $navposfromcorner;
+    right: 0;
+    width: $navsize;
+    height: $navsize;
+    text-align: center;
+    box-sizing: border-box;
+    font-size: 26px;
+}
+ 
+//the big menu button
+.menu-open-button {
+    position: absolute;
+    background: #EEEEEE;
+    border-radius: 100%;        //create a circle
+    width: $mainbuttonsize;
+    height: $mainbuttonsize;
+    margin-top: 10px;
+    margin-left: -30px;
+    color: #FFFFFF;
+    text-align: center;
+    line-height: 80px;
+    transform: translate3d(0, 0, 0);
+    transition: transform ease-out 200ms;
+}
+//the menu item buttons
+$font-stack: Helvetica, sans-serif;
+.menu-item {
+    position: absolute;
+    background: #EEEEEE;
+    border-radius: 100%;
+    width: $menubuttonsize;
+    height: $menubuttonsize;
+    margin-top: 20px;
+    margin-left: -20px;
+    color: #ffffff; //color of the text
+    transform: translate3d(0, 0, 0);
+    transition: transform ease-out 200ms;
+}
+
+.menu-open {
+    display: none;
+}
+//code for the three lines inside the big button
+.lines {
+    width: 25px;
+    height: 3px;
+    background: #596778;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -12.5px;
+    margin-top: -1.5px;
+    transition: transform 200ms;
+}
+//code that places those lines
+.line-1 {
+    transform: translate3d(0, -8px, 0);
+}
+ 
+.line-2 {
+    transform: translate3d(0, 0, 0);
+}
+ 
+.line-3 {
+    transform: translate3d(0, 8px, 0);
+}
+ 
+//code that translates those lines into an X
+.menu-open:checked + .menu-open-button .line-1 {
+    transform: translate3d(0, 0, 0) rotate(45deg);
+}
+ 
+.menu-open:checked + .menu-open-button .line-2 {
+    transform: translate3d(0, 0, 0) scale(0.1, 1);
+}
+ 
+ .menu-open:checked + .menu-open-button .line-3 {
+    transform: translate3d(0, 0, 0) rotate(-45deg);
+ }
+
+//more big button menu info
+.menu-open-button {
+    z-index: 2;
+    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition-duration: 400ms;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.14);
+}
+//set hover animations
+.menu-open-button:hover {
+    transform: scale(1.2, 1.2) translate3d(0, 0, 0);
+}
+//set animations when clicked/checked (the original button is a checkbox)
+.menu-open:checked + .menu-open-button {
+    transition-timing-function: linear;
+    transition-duration: 200ms;
+    transform: scale(0.8, 0.8) translate3d(0, 0, 0);
+}
+
+//set a transition-timing function for all elements of menu-open when checked
+//this determined the animation of all sub buttons
+.menu-open:checked ~ .menu-item {
+    transition-timing-function: cubic-bezier(0.935, 0, 0.34, 1.33);
+}
+
+/*--------------------------------------
+Code for the 'sub menu' colored buttons 
+-----------------------------------------*/
+//what color when you hover over the button
+.menu-item:hover {
+    background: #EEEEEE;
+    color: #3290B1;
+}
+
+//create the button translation durations
+$menu-items: 6;
+$transition-duration: 180ms;
+
+@for $i from 3 through $menu-items {
+  .menu-item:nth-child(#{$i}) {
+    transition-duration: $transition-duration;
+  }
+}
+
+
+ /*
+ this is where the subbuttons position is determined
+ starts with the first 
+ previous included 
+ -webkit-transition-duration: 180ms; 
+ -webkit-transform: translate3d(0.08361px, -104.99997px, 0);
+ this added support for older safari browsers
+ */
+ $origin-x: 0;
+ $origin-y: 0;
+ $radius: 65px;
+ $angle-increment: 45deg; //not sure if this is useful
+ $menu-items: 3;
+ $start-angle: 0deg; // variable for starting angle
+ 
+ @for $i from 1 through $menu-items {
+   $angle: ($i - 1) * $angle-increment + $start-angle; // Add starting angle to angle calculation
+   $x: $origin-x + ($radius * math.sin($angle));
+   $y: $origin-y + ($radius * math.cos($angle));
+   //when menu open is checked assign a duration of animation and the position to where the button should move
+   .menu-open:checked ~ .menu-item:nth-child(#{$i + 2}) {
+     transition-duration: #{$i * 100 + 100}ms;
+     transform: translate3d($x, $y, 0);
+   }
+ }
+ /*
+ .menu-open:checked ~ .menu-item:nth-child(3) {
+    transition-duration: 180ms;
+    transform: translate3d(0.08361px, -104.99997px, 0);
+ }
+ 
+ .menu-open:checked ~ .menu-item:nth-child(4) {
+    transition-duration: 280ms;
+    transform: translate3d(90.9466px, -52.47586px, 0);
+ }
+ 
+ .menu-open:checked ~ .menu-item:nth-child(5) {
+    transition-duration: 380ms;
+    transform: translate3d(90.9466px, 52.47586px, 0);
+ }
+ 
+ .menu-open:checked ~ .menu-item:nth-child(6) {
+    transition-duration: 480ms;
+    transform: translate3d(0.08361px, 104.99997px, 0);
+ }
+ 
+ .menu-open:checked ~ .menu-item:nth-child(7) {
+    transition-duration: 580ms;
+    transform: translate3d(-90.86291px, 52.62064px, 0);
+ }
+ 
+ .menu-open:checked ~ .menu-item:nth-child(8) {
+    transition-duration: 680ms;
+    transform: translate3d(-91.03006px, -52.33095px, 0);
+ }
+ 
+ .menu-open:checked ~ .menu-item:nth-child(9) {
+    transition-duration: 780ms;
+    transform: translate3d(-0.25084px, -104.9997px, 0);
+ }
+ */
+ 
+ /*-----------------
+ Colors of subbuttons
+ -----------------*/
+
+.blue {
+    background-color: #669AE1;
+    box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.14);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.12);
+}
+ 
+.blue:hover {
+    color: #669AE1;
+    text-shadow: none;
+}
+ 
+ .green {
+    background-color: #70CC72;
+    box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.14);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.12);
+ }
+ 
+ .green:hover {
+    color: #70CC72;
+    text-shadow: none;
+ }
+ 
+ .red {
+    background-color: #FE4365;
+    box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.14);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.12);
+ }
+ 
+ .red:hover {
+    color: #FE4365;
+    text-shadow: none;
+ }
+
+ /*
+ 
+ .purple {
+    background-color: #C49CDE;
+    box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.14);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.12);
+ }
+ 
+ .purple:hover {
+    color: #C49CDE;
+    text-shadow: none;
+ }
+ 
+ .orange {
+    background-color: #FC913A;
+    box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.14);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.12);
+ }
+ 
+ .orange:hover {
+    color: #FC913A;
+    text-shadow: none;
+ }
+ 
+ .lightblue {
+    background-color: #62C2E4;
+    box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.14);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.12);
+ }
+ 
+ .lightblue:hover {
+    color: #62C2E4;
+    text-shadow: none;
+ }
+
+ */

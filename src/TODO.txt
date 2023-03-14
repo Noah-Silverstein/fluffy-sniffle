@@ -1,0 +1,34 @@
+- add resource capabilities to worlds
+- add button functionality  -> one button should move planets to their actual orbits
+                            -> one button should bring up a list of planets in the system
+                            -> maybe we can change the context of the middle button depending on what we've selected 
+- add resource panel
+- fix camera
+- move scaling to drawer and add change scaling function to drawer
+- Highlights are ugly as fuck maybe remove
+
+
+-------------------
+Framing idea:
+contacted by alien, instructions to build something
+to build that requires resources not found on earth
+
+have research as a resource that unlocks new harvesting abilities
+perhaps have alien tech 
+
+-> need to get resources from other planets
+
+eventual end game is creating a warp ship to another star(randomized)
+repeat the loop but with info already gained. New aspect trade with alien civ
+-> repeat?
+
+-> second end game new universe --> you could assign different elements
+
+IDEAS
+
+space elevator
+dyson Ring
+solar power
+mantle/core harvester
+gravity well pozer generator
+von nuemann machines - self replicating machines

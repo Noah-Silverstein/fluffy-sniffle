@@ -3,50 +3,79 @@ this will draw all elements on the screen
 so draw a planet
 or move/redraw a planet 
 all of that happens here
+scaling from d3 scaling https://github.com/d3/d3-scale/blob/main/README.md#power-scales
 */
 
-import { Color3, Curve3, MeshBuilder, Scene, StandardMaterial, Vector3 } from "babylonjs";
+import { AbstractMesh, ActionManager, Color3, Curve3, ExecuteCodeAction, HighlightLayer, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3 } from "babylonjs";
 import { CelestialBody, Moon, Planet, Star } from "./CelestialBodies";
 import { PlanetarySystem } from "./PlanetarySystem";
+import { scalePow, scaleLog } from "d3-scale"
 
 export class Drawer {
     scene: Scene;
+    planethl: HighlightLayer;
     constructor(scene: Scene){
         this.scene = scene
+        console.log("created drawer");
+        //highlighter
+        this.planethl = new HighlightLayer("planethighlightlayer", this.scene, {blurHorizontalSize: 0.5, blurVerticalSize: 0.5})
+        this.planethl.innerGlow = false; // disable the inner glow effect
+        //this.planethl.outerGlow = false; // disable the outer glow effect
+    }
+
+    scaleCelestialBody(num: number){
+        let customPwrFct = scalePow().domain([1000,1392000]).range([2,150]);
+        let customLogFct = scaleLog().domain([1000,1392000]).range([5,150]);
+        return customLogFct(num);
     }
     
-    drawPlanet(planet: Planet, color: Color3){
+    drawPlanet(planet: Planet | CelestialBody, color: Color3){
         let planetMesh = MeshBuilder.CreateSphere(planet.name, { diameter: planet.size }, this.scene);
         let planetMaterial = new StandardMaterial(planet.name+"Material", this.scene); 
         //set color to material
         planetMaterial.emissiveColor = color
         //set material to mesh
         planetMesh.material = planetMaterial;
+        //set mesh to be pickable
+        planetMesh.isPickable = true; 
+        //what to do when hovering over the mesh
+        this.setMeshSelectable(planetMesh, this.scene, this.planethl, new Color3(0,0,0))
     }
 
-    drawMoon(moon: Moon, color: Color3){
+    drawMoon(moon: Moon | CelestialBody, color: Color3){
         let moonMesh = MeshBuilder.CreateSphere(moon.name, { diameter: moon.size }, this.scene);
         let moonMaterial = new StandardMaterial(moon.name+"Material", this.scene); 
         //set color to material
         moonMaterial.emissiveColor = color
         //set material to mesh
         moonMesh.material = moonMaterial;
+        //set mesh to be pickable
+        moonMesh.isPickable = true; 
+        //what to do when hovering over the mesh
+        this.setMeshSelectable(moonMesh, this.scene, this.planethl, new Color3(0,0,0))
+
+
     }
 
-    drawStar(star: Star, color: Color3){
+    //have to allow celestialbody for some reason
+    drawStar(star: Star | CelestialBody, color: Color3){
         let starMesh = MeshBuilder.CreateSphere(star.name, { diameter: star.size }, this.scene);
         let starMaterial = new StandardMaterial(star.name+"Material", this.scene); 
         //set color to material
         starMaterial.emissiveColor = color
         //set material to mesh
         starMesh.material = starMaterial;
+        //set mesh to be pickable
+        starMesh.isPickable = true; 
+        //what to do when hovering over the mesh
+        this.setMeshSelectable(starMesh, this.scene, this.planethl, new Color3(0,0,0))
+
     }
 
     drawSolarSystem(sys: PlanetarySystem, colors: {[index:string]: Color3}){
-        let bodies = Object.values(sys.sysBodies)
-        console.log(bodies);
-        
+        let bodies = Object.values(sys.sysBodies)        
         bodies.forEach(body => {
+            
             switch (true) {
                 case body instanceof Star:
                     this.drawStar(body, colors[body.name])
@@ -150,6 +179,20 @@ export class Drawer {
             
         });
 
+    }
+
+    setMeshSelectable(mesh: Mesh, scene: Scene, hl: HighlightLayer, color: Color3){
+        mesh.actionManager = new ActionManager(this.scene);
+        //on mouse enter mesh
+        mesh.actionManager.registerAction(new ExecuteCodeAction(ActionManager.OnPointerOverTrigger, function(ev){	
+            scene.hoverCursor = "pointer";
+            //hl.addMesh(mesh, color);
+        }));
+
+        //on mouse exit mesh
+        mesh.actionManager.registerAction(new ExecuteCodeAction(ActionManager.OnPointerOutTrigger, function(ev){
+           // hl.removeMesh(mesh);
+        }))
     }
 
 }

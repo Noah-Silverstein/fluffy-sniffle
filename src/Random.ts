@@ -12,3 +12,72 @@ export function getRandomElements(arr: Array<any>, n: number) {
 export function getRndInteger(min: number, max: number) {
     return Math.floor(Math.random() * (max - min) ) + min;
   } 
+
+export let starNames = [
+  'Zorin', 
+  'Aurin', 
+  'Lyndra', 
+  'Niraya', 
+  'Vaxar', 
+  'Xandria', 
+  'Zephyrion', 
+  'Nivara', 
+  'Elvandar', 
+  'Galaxor', 
+  'Nebulia', 
+  'Stellara', 
+  'Solairis', 
+  'Astronia', 
+  'Lunaris', 
+  'Ecliptix', 
+  'Novastra', 
+  'Celestia', 
+  'Astroxia', 
+  'Orbiton'
+];
+
+export let planetNames = [
+  'Aurion', 
+  'Caldera', 
+  'Elysium', 
+  'Feronia', 
+  'Gaia', 
+  'Helion', 
+  'Ignatia', 
+  'Jovar', 
+  'Korinthea', 
+  'Luminar', 
+  'Mystia', 
+  'Nebulon', 
+  'Olympus', 
+  'Pandora', 
+  'Quintar', 
+  'Ravenna', 
+  'Sylvan', 
+  'Talaxia', 
+  'Umbriel', 
+  'Vesperia'
+];
+
+export let moonNames = [
+  'Aurora', 
+  'Bellona', 
+  'Calyx', 
+  'Daphne', 
+  'Elara', 
+  'Feron', 
+  'Gwyneth', 
+  'Halia', 
+  'Idalia', 
+  'Jordana', 
+  'Kael', 
+  'Liriope', 
+  'Morgath', 
+  'Naida', 
+  'Ophelia', 
+  'Prysm', 
+  'Quinna', 
+  'Rhea', 
+  'Selene', 
+  'Thalia'
+];
